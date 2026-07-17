@@ -29,10 +29,18 @@ function buildMailOptions({ fullName, email, phone, service, message }) {
 
 async function submitContact(payload) {
   try {
+    console.log("EMAIL_FROM:", process.env.EMAIL_FROM);
+    console.log("COMPANY_EMAIL:", process.env.COMPANY_EMAIL);
+
     await transporter.sendMail(buildMailOptions(payload));
   } catch (mailErr) {
+    console.error("Mail Error:", mailErr);
     console.error("Failed to send contact email:", mailErr.message);
-    throw new ApiError(502, "Failed to send your message. Please try again later.");
+
+    throw new ApiError(
+      502,
+      "Failed to send your message. Please try again later."
+    );
   }
 }
 
