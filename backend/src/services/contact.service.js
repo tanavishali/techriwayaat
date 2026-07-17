@@ -3,7 +3,7 @@ const ApiError = require("../utils/ApiError");
 
 function buildMailOptions({ fullName, email, phone, service, message }) {
   return {
-    from: process.env.EMAIL_USER,
+    from: process.env.EMAIL_FROM || "onboarding@resend.dev",
     to: process.env.COMPANY_EMAIL,
     replyTo: email,
     subject: `New contact form submission — ${service}`,

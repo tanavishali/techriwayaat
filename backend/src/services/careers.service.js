@@ -16,7 +16,7 @@ async function getApplicationCounts() {
 
 function buildMailOptions({ job, fullName, email, phone, linkedin, portfolio, coverLetter, cv }) {
   return {
-    from: process.env.EMAIL_USER,
+    from: process.env.EMAIL_FROM || "onboarding@resend.dev",
     to: process.env.COMPANY_EMAIL,
     replyTo: email,
     subject: `New internship application — ${job.title}`,
