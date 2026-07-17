@@ -21,16 +21,20 @@ const allowedOrigins = (process.env.CLIENT_ORIGIN || "")
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow non-browser requests (curl, Postman, server-to-server) with no Origin header
+      // Allow requests without an Origin header (Postman, curl, etc.)
       if (!origin) return callback(null, true);
+
       if (
         allowedOrigins.includes(origin) ||
-        /^https:\/\/techriwayaat[a-z0-9-]*(-tanavishalis-projects)?\.vercel\.app$/.test(origin)
+        /^https:\/\/techriwayaat.*\.vercel\.app$/.test(origin)
       ) {
         return callback(null, true);
       }
-      return callback(new Error(`Origin ${origin} not allowed by CORS`));
+
+      console.log("Blocked Origin:", origin);
+      return callback(null, false);
     },
+    credentials: true,
   })
 );
 app.use(express.json());
