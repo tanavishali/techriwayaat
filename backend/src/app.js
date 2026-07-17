@@ -13,9 +13,24 @@ const app = express();
 
 app.use(helmet());
 app.use(morgan("dev"));
+const allowedOrigins = (process.env.CLIENT_ORIGIN || "")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+
 app.use(
   cors({
-    origin: (process.env.CLIENT_ORIGIN || "").split(",").map((o) => o.trim()),
+    origin: (origin, callback) => {
+      // Allow non-browser requests (curl, Postman, server-to-server) with no Origin header
+      if (!origin) return callback(null, true);
+      if (
+        allowedOrigins.includes(origin) ||
+        /^https:\/\/techriwayaat[a-z0-9-]*(-tanavishalis-projects)?\.vercel\.app$/.test(origin)
+      ) {
+        return callback(null, true);
+      }
+      return callback(new Error(`Origin ${origin} not allowed by CORS`));
+    },
   })
 );
 app.use(express.json());
